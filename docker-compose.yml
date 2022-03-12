@@ -1,0 +1,45 @@
+version: "3.9"
+services:
+  db:
+    image: mongo
+    env_file: './.env'
+    hostname: url-shortener-db
+    ports:
+      - ${DB_HOST_PORT}:${DB_DOCKER_PORT}
+    volumes:
+      - mongodb:/data/db
+    networks:
+      - net
+    restart: unless-stopped
+  testdb:
+    image: mongo
+    env_file: '.env'
+    hostname: url-shortener-testdb
+    ports:
+      - ${TEST_DB_HOST_PORT}:${TEST_DB_DOCKER_PORT}
+    volumes:
+      - mongotestdb:/data/test-db
+    networks:
+      - net
+  app:
+    image: url-shortener:SNAPSHOT
+    env_file: './.env'
+    depends_on:
+      - db
+    ports:
+      - ${APP_HOST_PORT}:${APP_DOCKER_PORT}
+    environment:
+      DB_URI: ${DB_URI}
+    networks:
+      - net
+
+volumes:
+  mongodb:
+    name: url-shortener-data
+  mongotestdb:
+    name: url-shortener-test-data
+
+networks:
+  net:
+    name: url-shortener-net
+    driver: bridge

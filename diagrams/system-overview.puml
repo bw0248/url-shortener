@@ -1,0 +1,32 @@
+@startuml
+
+allowmixing
+hide members
+
+package DatabaseContainer <<Frame>> {
+  package MongoDB <<Database>> {
+  }
+}
+
+package AppContainer {
+class "ShortenerController" as c
+class "ShortenerService" as s
+
+interface "UrlStorage" as us
+class MongoUrlStorage implements us
+
+interface "UrlMappingStrategy" as ums
+class "SequenceMappingStrategy" as sms implements ums
+
+c -- s
+s - us
+ums - s
+
+MongoDB - MongoUrlStorage
+note on link: via URI
+}
+
+() HTTP
+HTTP -- c
+
+@enduml

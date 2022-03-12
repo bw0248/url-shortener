@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+      # connection uri supplied by ENV variable if deployed via docker compose, default to localhost for running in IDE
+      uri: ${TEST_DB_URI:mongodb://localhost:27018/test-db}
+      auto-index-creation: true
+service:
+  max-retries: 5
